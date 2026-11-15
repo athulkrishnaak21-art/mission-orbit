@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISSION: ORBIT — Space Mission Design Game</title>
+<style>
+:root{--bg:#070d1e;--panel:#101b34;--panel2:#172744;--line:#263b62;--cyan:#48d7e8;--blue:#6b91ff;--gold:#ffc45b;--green:#64dfad;--red:#ff7185;--text:#eff5ff;--muted:#a8bad5}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% 0%,#142c55 0%,#070d1e 48%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:22px max(18px,calc((100% - 1180px)/2));border-bottom:1px solid #263b62;background:#081226dd;display:flex;justify-content:space-between;align-items:center;gap:15px;position:sticky;top:0;z-index:5;backdrop-filter:blur(10px)}
+.brand{font-weight:900;letter-spacing:2px;font-size:18px}.brand span{color:var(--cyan)}.tag{font-size:11px;color:var(--gold);letter-spacing:1.5px}
+main{max-width:1180px;margin:auto;padding:26px 18px 60px}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:22px;align-items:center;margin:12px 0 26px}
+h1{font-size:clamp(30px,5vw,52px);line-height:1.05;margin:8px 0 12px;letter-spacing:-1.5px}.hero p{color:var(--muted);max-width:670px}.planet{height:210px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#a6e4ff 0,#3979c4 18%,#174178 48%,#09162d 70%);box-shadow:0 0 70px #277bd966;position:relative;margin:auto;width:210px}.planet:after{content:"";position:absolute;width:280px;height:95px;border:2px solid #61d6e477;border-radius:50%;transform:rotate(-22deg);left:-35px;top:58px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:linear-gradient(145deg,#142340,#0e1930);border:1px solid var(--line);border-radius:17px;padding:19px;box-shadow:0 12px 35px #0003}.card h2{font-size:16px;margin:0 0 15px;letter-spacing:.5px}.eyebrow{font-size:10px;color:var(--cyan);letter-spacing:1.8px;font-weight:800;margin-bottom:7px}
+label{display:block;color:var(--muted);font-size:12px;margin:12px 0 6px}select,input{width:100%;padding:12px;background:#09152b;color:var(--text);border:1px solid #32496e;border-radius:9px;font:inherit}
+.options{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.option{display:flex;gap:9px;align-items:flex-start;padding:10px;background:#0a1730;border:1px solid #2a3d60;border-radius:10px}.option input{width:auto;margin-top:3px;accent-color:var(--cyan)}.option b{font-size:12px;display:block}.option small{color:var(--muted);font-size:10px}
+.meters{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.meter{background:#0a1730;padding:12px;border-radius:11px}.meter-top{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}.meter strong{color:var(--text)}.track{height:7px;background:#253653;border-radius:9px;margin-top:8px;overflow:hidden}.fill{height:100%;width:0;background:var(--cyan);border-radius:9px;transition:width .25s}
+.btn{border:0;border-radius:10px;padding:12px 16px;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#42cfe3,#718dff);color:#071329}.btn.secondary{background:#1b3154;color:var(--text);border:1px solid #36527f}.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.hint{color:var(--muted);font-size:11px}.result{margin-top:15px;padding:16px;border-radius:12px;background:#09152b;border:1px solid #344d74;display:none}.result.show{display:block}.result h3{margin:0 0 7px}.good{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--gold)}
+.data{display:flex;gap:13px;align-items:center}.asteroid{width:72px;height:72px;flex:none;border-radius:50%;background:radial-gradient(circle at 30% 25%,#b7a58b,#6c6258 45%,#292d3b 75%);box-shadow:inset -9px -8px 18px #0008,0 0 25px #8e9cb533}
+.data strong{display:block}.data p{margin:3px 0;color:var(--muted);font-size:12px}.source{font-size:11px;color:var(--muted);margin-top:13px}.source a{color:var(--cyan)}
+footer{text-align:center;color:#8194b3;font-size:11px;padding:22px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.planet{height:130px;width:130px}.planet:after{width:180px;height:60px;left:-25px;top:35px}.grid{grid-template-columns:1fr}.options{grid-template-columns:1fr 1fr}header{padding:15px 18px}.tag{display:none}}
+</style>
+</head>
+<body>
+<header><div class="brand">MISSION<span>:</span> ORBIT</div><div class="tag">DESIGN • LAUNCH • LEARN</div></header>
+<main>
+<section class="hero">
+ <div><div class="eyebrow">SPACE MISSION DESIGN SIMULATOR</div><h1>Your mission.<br><span style="color:var(--cyan)">Your decisions.</span></h1>
+ <p>Become a mission designer. Choose a destination, configure a spacecraft, balance limited resources and test whether your mission can reach its scientific goal.</p></div>
+ <div class="planet" aria-label="Illustration of a planet"></div>
+</section>
+<div class="grid">
+<section class="card">
+ <div class="eyebrow">01 / MISSION PROFILE</div><h2>Choose your destination</h2>
+ <label for="target">Mission target</label><select id="target">
+ <option value="moon">Moon — Lunar science mission</option><option value="mars" selected>Mars — Robotic exploration</option><option value="eros">Asteroid 433 Eros — Small-body study</option></select>
+ <label for="vehicle">Launch vehicle</label><select id="vehicle">
+ <option value="light">Light launcher — lower capacity, lower cost</option><option value="medium" selected>Medium launcher — balanced capacity</option><option value="heavy">Heavy launcher — high capacity, high cost</option></select>
+ <label for="engine">Propulsion system</label><select id="engine">
+ <option value="chemical" selected>Chemical — high thrust</option><option value="electric">Electric — efficient, low thrust</option><option value="hybrid">Hybrid — balanced performance</option></select>
+ <p class="hint">These are simplified educational game models, not flight-certified engineering designs.</p>
+</section>
+<section class="card">
+ <div class="eyebrow">02 / SCIENCE PAYLOAD</div><h2>Select your instruments</h2>
+ <div class="options">
+  <label class="option"><input type="checkbox" class="inst" value="camera" checked><span><b>Imaging camera</b><small>Visual mapping • 18 kg • 35 W</small></span></label>
+  <label class="option"><input type="checkbox" class="inst" value="spectrometer"><span><b>Spectrometer</b><small>Composition • 24 kg • 55 W</small></span></label>
+  <label class="option"><input type="checkbox" class="inst" value="radar"><span><b>Radar sounder</b><small>Subsurface • 32 kg • 80 W</small></span></label>
+  <label class="option"><input type="checkbox" class="inst" value="weather"><span><b>Weather station</b><small>Environment • 12 kg • 25 W</small></span></label>
+ </div>
+ <label for="budget">Mission budget (credits)</label><input id="budget" type="range" min="60" max="180" value="120" step="5" oninput="document.getElementById('budgetVal').textContent=this.value"><strong id="budgetVal" style="color:var(--gold)">120</strong> <span class="hint">credits</span>
+ <div class="btnrow"><button class="btn" id="simulate">RUN MISSION SIMULATION ↗</button><button class="btn secondary" id="reset">RESET</button></div>
+</section>
+<section class="card">
+ <div class="eyebrow">03 / LIVE ENGINEERING CHECK</div><h2>Resource dashboard</h2>
+ <div class="meters">
+  <div class="meter"><div class="meter-top"><span>Spacecraft mass</span><strong id="massText">—</strong></div><div class="track"><div class="fill" id="massBar"></div></div></div>
+  <div class="meter"><div class="meter-top"><span>Power demand</span><strong id="powerText">—</strong></div><div class="track"><div class="fill" id="powerBar"></div></div></div>
+  <div class="meter"><div class="meter-top"><span>Fuel reserve</span><strong id="fuelText">—</strong></div><div class="track"><div class="fill" id="fuelBar"></div></div></div>
+  <div class="meter"><div class="meter-top"><span>Estimated cost</span><strong id="costText">—</strong></div><div class="track"><div class="fill" id="costBar"></div></div></div>
+ </div>
+ <p class="hint" id="status">Choose your mission settings to calculate resource use.</p>
+ <div class="result" id="result" aria-live="polite"></div>
+</section>
+<section class="card">
+ <div class="eyebrow">04 / NASA DATA REFERENCE</div><h2>Real small-body science</h2>
+ <div class="data"><div class="asteroid"></div><div><strong>433 Eros</strong><p>Asteroid • Amor orbit class<br>Near-Earth object: Yes</p></div></div>
+ <p class="hint">This reference snapshot is based on the example object record in NASA/JPL's Small-Body Database (SBDB) API documentation. It is included as scientific context for the asteroid mission option; it is not a live API feed.</p>
+ <div class="source">NASA/JPL source: <a href="https://ssd-api.jpl.nasa.gov/doc/sbdb.html" target="_blank" rel="noopener">SBDB API documentation ↗</a><br>JPL API policy: API data should not be embedded directly in websites; this project uses a documented static reference snapshot.</div>
+</section>
+</div>
+</main>
+<footer>MISSION: ORBIT • Educational simulation • Simplified assumptions • Not for real mission design</footer>
+<script>
+const $=id=>document.getElementById(id);
+const instrument={camera:{mass:18,power:35,science:22},spectrometer:{mass:24,power:55,science:30},radar:{mass:32,power:80,science:28},weather:{mass:12,power:25,science:16}};
+const targets={moon:{distance:1,difficulty:18,science:"Lunar surface and mineral mapping"},mars:{distance:3,difficulty:42,science:"Planetary geology and climate"},eros:{distance:4,difficulty:52,science:"Small-body shape and composition"}};
+const vehicles={light:{mass:900,capacity:1600,cost:25},medium:{mass:1500,capacity:2600,cost:42},heavy:{mass:2300,capacity:3800,cost:65}};
+const engines={chemical:{mass:260,fuel:360,power:30,cost:22,eff:1},electric:{mass:190,fuel:180,power:75,cost:30,eff:1.25},hybrid:{mass:230,fuel:260,power:48,cost:27,eff:1.12}};
+function selected(){return [...document.querySelectorAll('.inst:checked')].map(x=>instrument[x.value]);}
+function calc(){
+ const t=targets[$('target').value],v=vehicles[$('vehicle').value],e=engines[$('engine').value],ins=selected();
+ const payload=ins.reduce((a,b)=>a+b.mass,0),power=ins.reduce((a,b)=>a+b.power,0)+e.power;
+ const mass=v.mass+e.mass+payload, fuel=e.fuel, cost=v.cost+e.cost+payload*.18+ t.difficulty*.35;
+ const capacity=v.capacity, powerSupply= $('vehicle').value==='heavy'?180:($('vehicle').value==='medium'?125:85);
+ const fuelNeed=(t.difficulty*5 + mass*.08)/e.eff;
+ const massPct=mass/capacity*100, powerPct=power/powerSupply*100, fuelPct=fuel/fuelNeed*100, costPct=cost/Number($('budget').value)*100;
+ const vals=[['massText','massBar',Math.round(mass)+' / '+capacity+' kg',massPct],['powerText','powerBar',power+' / '+powerSupply+' W',powerPct],['fuelText','fuelBar',Math.round(fuel)+' / '+Math.round(fuelNeed)+' kg',fuelPct],['costText','costBar',Math.round(cost)+' / '+$('budget').value+' cr',costPct]];
+ vals.forEach(([tx,bar,label,p])=>{$(tx).textContent=label;$(bar).style.width=Math.min(100,p)+'%';$(bar).style.background=p>100?'var(--red)':p>85?'var(--gold)':'var(--cyan)'});
+ const feasible=mass<=capacity&&power<=powerSupply&&fuel>=fuelNeed&&cost<=Number($('budget').value);
+ $('status').textContent=feasible?'Resource check: all selected limits are currently within range.':'Resource check: one or more limits are exceeded. Try changing your design.';
+ $('status').style.color=feasible?'var(--green)':'var(--gold)';
+ return {t,v,e,ins,payload,power,mass,fuel,cost,capacity,powerSupply,fuelNeed,feasible,science:ins.reduce((a,b)=>a+b.science,0)};
+}
+function simulate(){
+ const c=calc(),r=$('result');r.classList.add('show');
+ let score=Math.max(0,Math.min(100,Math.round(35+c.science*.65-(c.mass/c.capacity)*18-(c.power/c.powerSupply)*12-(c.cost/Number($('budget').value))*10)));
+ let success=c.feasible&&score>=55;
+ r.innerHTML=`<h3 class="${success?'good':'bad'}">${success?'MISSION SUCCESS':'MISSION NEEDS REDESIGN'}</h3><p>${success?'Your spacecraft meets the simplified resource limits and carries a useful science payload.':'At least one engineering constraint is outside its limit. Adjust the vehicle, propulsion, instruments or budget and try again.'}</p><p><strong>Mission score: ${score}/100</strong></p><p>Destination: ${c.t.science}. Payload science value: ${c.science} points. Estimated mission cost: ${Math.round(c.cost)} credits.</p><p class="hint">Score is a game metric, not a real-world probability of mission success.</p>`;
+}
+$('simulate').addEventListener('click',simulate);
+$('reset').addEventListener('click',()=>{ $('target').value='mars';$('vehicle').value='medium';$('engine').value='chemical';$('budget').value=120;$('budgetVal').textContent='120';document.querySelectorAll('.inst').forEach((x,i)=>x.checked=i===0);$('result').classList.remove('show');calc();});
+['target','vehicle','engine','budget'].forEach(id=>$(id).addEventListener('input',()=>{calc();$('result').classList.remove('show')}));
+document.querySelectorAll('.inst').forEach(x=>x.addEventListener('change',()=>{calc();$('result').classList.remove('show')}));
+calc();
+</script>
+</body></html>
