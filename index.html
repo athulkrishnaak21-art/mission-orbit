@@ -92,12 +92,36 @@ function calc(){
  $('status').style.color=feasible?'var(--green)':'var(--gold)';
  return {t,v,e,ins,payload,power,mass,fuel,cost,capacity,powerSupply,fuelNeed,feasible,science:ins.reduce((a,b)=>a+b.science,0)};
 }
+
 function simulate(){
- const c=calc(),r=$('result');r.classList.add('show');
- let score=Math.max(0,Math.min(100,Math.round(35+c.science*.65-(c.mass/c.capacity)*18-(c.power/c.powerSupply)*12-(c.cost/Number($('budget').value))*10)));
- let success=c.feasible&&score>=55;
- r.innerHTML=`<h3 class="${success?'good':'bad'}">${success?'MISSION SUCCESS':'MISSION NEEDS REDESIGN'}</h3><p>${success?'Your spacecraft meets the simplified resource limits and carries a useful science payload.':'At least one engineering constraint is outside its limit. Adjust the vehicle, propulsion, instruments or budget and try again.'}</p><p><strong>Mission score: ${score}/100</strong></p><p>Destination: ${c.t.science}. Payload science value: ${c.science} points. Estimated mission cost: ${Math.round(c.cost)} credits.</p><p class="hint">Score is a game metric, not a real-world probability of mission success.</p>`;
-}
+ const c=calc(),r=$('result');
+ r.classList.add('show');
+
+ let score=Math.max(0,Math.min(100,Math.round(
+  35+c.science*.65-(c.mass/c.capacity)*18-
+  (c.power/c.powerSupply)*12-
+  (c.cost/Number($('budget').value))*10
+ )));
+
+ let success=c.feasible;
+ let headline=!success?'MISSION NEEDS REDESIGN':
+  score>=55?'MISSION SUCCESS':'MISSION FEASIBLE — LOW SCIENCE SCORE';
+
+ let message=!success
+  ?'One or more engineering constraints are outside their limits. Adjust your design and try again.'
+  :score>=55
+   ?'Your spacecraft meets the resource limits and carries a useful science payload.'
+   :'Your spacecraft meets all engineering limits, but its science score is low. Consider adding useful scientific instruments if resources allow.';
+
+ r.innerHTML=`
+  <h3 class="${success?'good':'bad'}">${headline}</h3>
+  <p>${message}</p>
+  <p><strong>Mission score: ${score}/100</strong></p>
+  <p>Destination: ${c.t.science}. Payload science value: ${c.science} points. Estimated mission cost: ${Math.round(c.cost)} credits.</p>
+  <p class="hint">Score is a game metric, not a real-world probability of mission success.</p>
+ `;
+  }
+ 
 $('simulate').addEventListener('click',simulate);
 $('reset').addEventListener('click',()=>{ $('target').value='mars';$('vehicle').value='medium';$('engine').value='chemical';$('budget').value=120;$('budgetVal').textContent='120';document.querySelectorAll('.inst').forEach((x,i)=>x.checked=i===0);$('result').classList.remove('show');calc();});
 ['target','vehicle','engine','budget'].forEach(id=>$(id).addEventListener('input',()=>{calc();$('result').classList.remove('show')}));
